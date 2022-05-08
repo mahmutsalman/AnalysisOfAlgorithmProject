@@ -1,9 +1,12 @@
 #include<stdio.h>
 #include <string.h>
+
 //Global value
-int numberOfBasicOp=0;
+int numberOfBasicOp = 0;
+int count = 0;
+
 void insertionSort(int array[], int size) {
-    numberOfBasicOp=0;
+    numberOfBasicOp = 0;
     for (int step = 1; step < size; step++) {
         int key = array[step];
         int j = step - 1;
@@ -11,13 +14,12 @@ void insertionSort(int array[], int size) {
         // Compare key with each element on the left of it until an element smaller than
         // it is found.
         // For descending order, change key<array[j] to key>array[j].
-        while (++numberOfBasicOp &&key < array[j] && j >= 0 ) {
+        while (++numberOfBasicOp && key < array[j] && j >= 0) {
             array[j + 1] = array[j];
             --j;
         }
         array[j + 1] = key;
     }
-
 }
 
 // Quick-sort algorithm
@@ -32,7 +34,7 @@ void swap(int *a, int *b) {
 int partition(int array[], int low, int high) {
 
     // select the rightmost element as pivot
-    int pivot = array[high];
+    int pivot = array[low];
 
     // pointer for greater element
     int i = (low - 1);
@@ -58,6 +60,7 @@ int partition(int array[], int low, int high) {
     return (i + 1);
 }
 
+// QUICK SORT
 void quickSort(int array[], int low, int high) {
     if (low < high) {
 
@@ -74,6 +77,94 @@ void quickSort(int array[], int low, int high) {
     }
 }
 
+
+//MERGE SORT
+//stack
+int merge(int arr[], int l, int m, int r) {
+    int i = l; /* left subarray*/
+    int j = m + 1; /* right  subarray*/
+    int k = l; /* temporary array*/
+    int temp[r + 1];
+    while (i <= m && j <= r) {
+        if (arr[i] <= arr[j]) {
+            temp[k] = arr[i];
+            i++;
+        } else {
+            temp[k] = arr[j];
+            j++;
+        }
+        k++;
+        count++;
+
+    }
+    while (i <= m) {
+        temp[k] = arr[i];
+        i++;
+        k++;
+    }
+    while (j <= r) {
+        temp[k] = arr[j];
+        j++;
+        k++;
+    }
+    for (int p = l; p <= r; p++) {
+        arr[p] = temp[p];
+    }
+    return count;
+}
+int  mergesort( int arr[ ], int l, int r)
+{
+    int comparisons;
+    if(l<r)
+    {
+        int m= ( l+r)/2;
+        mergesort(arr,l,m);
+        mergesort(arr,m+1,r);
+        comparisons = merge(arr,l,m,r);
+    }
+    return comparisons;
+}
+
+// Generating worst case
+// Indicates function to join left and right subarray
+int join(int arr1[], int left1[], int right1[],
+         int l1, int m1, int r1) {
+    int i; // So used in second loop
+    for (i = 0; i <= m1 - l1; i++)
+        arr1[i] = left1[i];
+    for (int j = 0; j < r1 - m1; j++)
+        arr1[i + j] = right1[j];
+}
+
+// Indicates function to store alternate elements in left
+// and right subarray
+int split(int arr1[], int left1[], int right1[],
+          int l1, int m1, int r1) {
+    for (int i = 0; i <= m1 - l1; i++)
+        left1[i] = arr1[i * 2];
+    for (int i = 0; i < r1 - m1; i++)
+        right1[i] = arr1[i * 2 + 1];
+}
+
+// Indicates function to generate Worst Case of Merge Sort
+int generateWorstCase(int arr1[], int l1, int r1) {
+    if (l1 < r1) {
+        int m1 = l1 + (r1 - l1) / 2;
+        // creating two auxillary arrays
+        int left1[m1 - l1 + 1];
+        int right1[r1 - m1];
+        // Storing alternate array elements in left
+        // and right subarray
+        split(arr1, left1, right1, l1, m1, r1);
+        // Recursing first and second halves
+        generateWorstCase(left1, l1, m1);
+        generateWorstCase(right1, m1 + 1, r1);
+        // joining left and right subarray
+        join(arr1, left1, right1, l1, m1, r1);
+    }
+}
+
+
 void printArr(int a[], int n)/*function to print the array*/
 {
     int i;
@@ -81,12 +172,14 @@ void printArr(int a[], int n)/*function to print the array*/
         printf("%d ", a[i]);
     printf("\n");
 }
-int returnKthElement(int a[],int k){
-    return a[k-1];
+
+int returnKthElement(int a[], int k) {
+    return a[k - 1];
 }
-void read(int array[],char *inputFile){
-    int index=0;
-    int entity=0;
+
+void read(int array[], char *inputFile) {
+    int index = 0;
+    int entity = 0;
     FILE *fPtr;
     char fileNamex[100];
     strcpy(fileNamex, "C:\\Users\\asxdc\\CLionProjects\\AnalysisOfAlgorithmProject\\");
@@ -98,54 +191,109 @@ void read(int array[],char *inputFile){
 
     }
     while (fscanf(fPtr, "%d", &entity) != EOF) {
-        array[index]=entity;
+        array[index] = entity;
         index++;
     }
-
-
 }
 
 // SELECTION SORT
+// function to swap the the position of two elements
+void swap2(int *a, int *b) {
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
 
+void selectionSort(int array[], int size) {
+    for (int step = 0; step < size - 1; step++) {
+        int min_idx = step;
+        for (int i = step + 1; i < size; i++) {
+
+            // To sort in descending order, change > to < in this line.
+            // Select the minimum element in each loop.
+            if (++numberOfBasicOp && array[i] < array[min_idx])
+                min_idx = i;
+        }
+        // put min at the correct position
+        // exchange
+        swap2(&array[min_idx], &array[step]);
+    }
+}
 
 int main() {
-    int iterator=0;
-    while(iterator<10){
-        printf("Enter algorithm type:          --Insertion: 1,Quicksort: 3 \n");
+    int iterator = 0;
+    while (iterator < 10) {
+        setbuf(stdout, 0);
+        printf("Enter algorithm type:          --Insertion: 1,Merge Sort: 2 ,Quicksort: 3,Selection sort: 4 \n");
         int option;
         scanf("%d", &option);
 
         //For Insertion sort
-        if(option==1){
+        if (option == 1) {
             int a[15];
-            int kthElement=0;
+            int kthElement = 0;
             setbuf(stdout, 0);
             printf("%s", "Please enter the name of the file :");
             char filename[20];
             scanf("%s", filename);
-            read(a,filename);
-            numberOfBasicOp=0;
-            insertionSort(a,15);
-            printf("Number of comparasions %d\n",numberOfBasicOp);
+            read(a, filename);
+            numberOfBasicOp = 0;
+            insertionSort(a, 15);
+            printf("Number of comparisons %d\n", numberOfBasicOp);
             printf("k th element?");
-            scanf("%d",&kthElement);
-            printf("%d\n", returnKthElement(a,kthElement));
+            scanf("%d", &kthElement);
+            printf("%d\n", returnKthElement(a, kthElement));
         }
-        // For Quicksort
-        else if(option==3){
-            int a[15];
-            int kthElement=0;
+            //Merge sort
+        else if (option == 2) {
+            int a[50];
+            int kthElement = 0;
             setbuf(stdout, 0);
             printf("%s", "Please enter the name of the file :");
             char filename[20];
             scanf("%s", filename);
-            read(a,filename);
-            numberOfBasicOp=0;
-            quickSort(a,0,14);
-            printf("Number of comparasions %d\n",numberOfBasicOp);
+            read(a, filename);
+            numberOfBasicOp = 0;
+            read(a, filename);
+            // Generate worst case
+            generateWorstCase(a, 0, 50 - 1); // size - 1
+            printArr(a, 50);
+            printf("Number of comparisons %d \n", mergesort(a,0,50-1));
+
+        }
+            // Quicksort
+        else if (option == 3) {
+            int a[50];
+            int kthElement = 0;
+            setbuf(stdout, 0);
+            printf("%s", "Please enter the name of the file :");
+            char filename[20];
+            scanf("%s", filename);
+            read(a, filename);
+            numberOfBasicOp = 0;
+            quickSort(a, 0, 49);
+            printf("Number of comparisons %d\n", numberOfBasicOp);
             printf("k th element?");
-            scanf("%d",&kthElement);
-            printf("%d\n", returnKthElement(a,kthElement));
+            scanf("%d", &kthElement);
+            printf("%d\n", returnKthElement(a, kthElement));
+        }
+            //Selection sort
+        else if (option == 4) {
+            int a[10];
+            int kthElement = 0;
+            setbuf(stdout, 0);
+            printf("%s", "Please enter the name of the file :");
+            char filename[20];
+            scanf("%s", filename);
+            read(a, filename);
+            numberOfBasicOp = 0;
+            selectionSort(a, 10);
+            printf("Number of comparisons %d\n", numberOfBasicOp);
+            printf("k th element?");
+            scanf("%d", &kthElement);
+            printf("%d\n", returnKthElement(a, kthElement));
+
+
         }
 
     }

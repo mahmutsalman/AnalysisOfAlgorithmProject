@@ -226,6 +226,68 @@ int selectionSort(int array[], int size,int kthElement) {
     }
 }
 
+// Heap sort
+// Function to swap the the position of two elements
+void swap3(int *a, int *b) {
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+void heapify(int arr[], int n, int i) {
+    // Find largest among root, left child and right child
+    int largest = i;
+    int left = 2 * i + 1;
+    int right = 2 * i + 2;
+
+    if (left < n){
+        ++numberOfBasicOp;
+        if(arr[left] > arr[largest]){
+            largest = left;
+        }
+    }
+    if (right < n){
+        ++numberOfBasicOp;
+        if(arr[right] > arr[largest]){
+            largest = right;
+        }
+    }
+
+    // Swap and continue heapifying if root is not largest
+    if (largest != i) {
+        swap3(&arr[i], &arr[largest]);
+        heapify(arr, n, largest);
+    }
+}
+
+// Main function to do heap sort
+void heapSort(int arr[],int n) {
+
+    // Build max heap
+    for (int i = n / 2 - 1; i >= 0; i--)
+        heapify(arr, n, i);
+
+    // Heap sort
+    for (int i = n - 1; i >= 0; i--) {
+        swap3(&arr[0], &arr[i]);
+
+        // Heapify root element to get highest element at root again
+        heapify(arr, i, 0);
+    }
+
+}
+void deleteRoot(int arr[],int {
+    int arr2[sizeof(arr)-1];
+    //Delete root
+    for (int i = 1; i < sizeof(arr); ++i) {
+        arr2[i-1]=arr[i];
+    }
+    // Do heapify on arr2[]
+    heapSort(arr2,sizeof(arr2), );
+
+
+}
+
 
 int main() {
     int iterator = 0;
@@ -267,7 +329,7 @@ int main() {
             printf("Number of comparisons %d \n", mergesort(a,0,50-1));
 
         }
-            // Quicksort
+        // Quicksort
         else if (option == 3) {
             int a[50];
             int kthElement = 0;
@@ -283,7 +345,8 @@ int main() {
             scanf("%d", &kthElement);
             printf("%d\n", returnKthElement(a, kthElement));
         }
-            //Selection sort
+
+        //Selection sort
         else if (option == 4) {
             int a[7];
             int kthElement = 0;
@@ -292,11 +355,28 @@ int main() {
             char filename[20];
             scanf("%s", filename);
             read(a, filename);
-            printf("k th element?");
-            scanf("%d", &kthElement);
-            numberOfBasicOp = 0;
+
             printf("kth element is %d\n",selectionSort(a, 7,kthElement));
             printf("Number of comparisons %d\n", numberOfBasicOp);
+        }
+        // Heap sort
+        else if(option == 5){
+            int a[50];
+            int kthElement = 0;
+            setbuf(stdout, 0);
+            printf("%s", "Please enter the name of the file :");
+            char filename[20];
+            scanf("%s", filename);
+            read(a, filename);
+            numberOfBasicOp = 0;
+            heapSort(a,50);
+            printf("k th element?");
+            scanf("%d", &kthElement);
+            int numberOfDeletion=50-kthElement;
+            for (int i = 0; i < numberOfDeletion; ++i) {
+
+            }
+
         }
     }
 

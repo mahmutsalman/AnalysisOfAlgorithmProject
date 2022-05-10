@@ -112,15 +112,14 @@ int merge(int arr[], int l, int m, int r) {
     }
     return count;
 }
-int  mergesort( int arr[ ], int l, int r)
-{
+
+int mergesort(int arr[], int l, int r) {
     int comparisons;
-    if(l<r)
-    {
-        int m= ( l+r)/2;
-        mergesort(arr,l,m);
-        mergesort(arr,m+1,r);
-        comparisons = merge(arr,l,m,r);
+    if (l < r) {
+        int m = (l + r) / 2;
+        mergesort(arr, l, m);
+        mergesort(arr, m + 1, r);
+        comparisons = merge(arr, l, m, r);
     }
     return comparisons;
 }
@@ -204,11 +203,11 @@ void swap2(int *a, int *b) {
     *b = temp;
 }
 
-int selectionSort(int array[], int size,int kthElement) {
+int selectionSort(int array[], int size, int kthElement) {
     for (int step = 0; step < size - 1; step++) {
         int min_idx = step;
-        if(step==kthElement) {
-            return array[kthElement-1];
+        if (step == kthElement) {
+            return array[kthElement - 1];
         }
         for (int i = step + 1; i < size; i++) {
 
@@ -220,7 +219,7 @@ int selectionSort(int array[], int size,int kthElement) {
         // put min at the correct position
         // exchange
 
-            swap2(&array[min_idx], &array[step]);
+        swap2(&array[min_idx], &array[step]);
 
 
     }
@@ -228,64 +227,64 @@ int selectionSort(int array[], int size,int kthElement) {
 
 // Heap sort
 // Function to swap the the position of two elements
-void swap3(int *a, int *b) {
-    int temp = *a;
-    *a = *b;
-    *b = temp;
-}
+
+
+// To heapify a subtree with node i as root
+
+// Size of heap is n
 
 void heapify(int arr[], int n, int i) {
-    // Find largest among root, left child and right child
-    int largest = i;
-    int left = 2 * i + 1;
-    int right = 2 * i + 2;
+    int largest = i; // Initialize largest as root
+    int leftChild = 2 * i + 1; // left child = 2*i + 1
+    int rightChild = 2 * i + 2; // right child = 2*i + 2
 
-    if (left < n){
-        ++numberOfBasicOp;
-        if(arr[left] > arr[largest]){
-            largest = left;
-        }
-    }
-    if (right < n){
-        ++numberOfBasicOp;
-        if(arr[right] > arr[largest]){
-            largest = right;
-        }
-    }
+// If left child is greater than root
 
-    // Swap and continue heapifying if root is not largest
+    if (leftChild < n && arr[leftChild] > arr[largest])
+        largest = leftChild;
+
+// If right child is greater than new largest
+
+    if (rightChild < n && arr[rightChild] > arr[largest])
+        largest = rightChild;
+
+// If largest is not the root
+
     if (largest != i) {
-        swap3(&arr[i], &arr[largest]);
+// swap root with the new largest
+
+        swap(&arr[i], &arr[largest]);
+
+// Recursively heapify the affected sub-tree i.e, subtree with root as largest
         heapify(arr, n, largest);
     }
 }
 
-// Main function to do heap sort
-void heapSort(int arr[],int n) {
 
-    // Build max heap
-    for (int i = n / 2 - 1; i >= 0; i--)
+// Function to build a Max-Heap from a given array
+
+void buildHeap(int arr[], int n) {
+// Index of last non-leaf node
+    int lastNonLeafNode = (n / 2) - 1;
+
+// Perform level order traversal in reverse from last non-leaf node to the root node and heapify each node
+    for (int i = lastNonLeafNode; i >= 0; i--) {
         heapify(arr, n, i);
-
-    // Heap sort
-    for (int i = n - 1; i >= 0; i--) {
-        swap3(&arr[0], &arr[i]);
-
-        // Heapify root element to get highest element at root again
-        heapify(arr, i, 0);
     }
-
 }
-void deleteRoot(int arr[],int {
-    int arr2[sizeof(arr)-1];
-    //Delete root
-    for (int i = 1; i < sizeof(arr); ++i) {
-        arr2[i-1]=arr[i];
-    }
-    // Do heapify on arr2[]
-    heapSort(arr2,sizeof(arr2), );
 
+void deleteRoot(int arr[], int n) {
+// Get the last element
+    int lastElement = arr[n - 1];
 
+// Replace root with last element
+    arr[0] = lastElement;
+
+// Decrease size of heap by 1
+    n = n - 1;
+
+// heapify the root node
+    heapify(arr, n, 0);
 }
 
 
@@ -293,7 +292,7 @@ int main() {
     int iterator = 0;
     while (iterator < 10) {
         setbuf(stdout, 0);
-        printf("Enter algorithm type:          --Insertion: 1,Merge Sort: 2 ,Quicksort: 3,Selection sort: 4 \n");
+        printf("Enter algorithm type:          --Insertion: 1,Merge Sort: 2 ,Quicksort: 3,Selection sort: 4 , Heap sort: 5 \n");
         int option;
         scanf("%d", &option);
 
@@ -326,10 +325,10 @@ int main() {
             // Generate worst case
             generateWorstCase(a, 0, 50 - 1); // size - 1
             printArr(a, 50);
-            printf("Number of comparisons %d \n", mergesort(a,0,50-1));
+            printf("Number of comparisons %d \n", mergesort(a, 0, 50 - 1));
 
         }
-        // Quicksort
+            // Quicksort
         else if (option == 3) {
             int a[50];
             int kthElement = 0;
@@ -346,7 +345,7 @@ int main() {
             printf("%d\n", returnKthElement(a, kthElement));
         }
 
-        //Selection sort
+            //Selection sort
         else if (option == 4) {
             int a[7];
             int kthElement = 0;
@@ -356,12 +355,13 @@ int main() {
             scanf("%s", filename);
             read(a, filename);
 
-            printf("kth element is %d\n",selectionSort(a, 7,kthElement));
+            printf("kth element is %d\n", selectionSort(a, 7, kthElement));
             printf("Number of comparisons %d\n", numberOfBasicOp);
         }
-        // Heap sort
-        else if(option == 5){
-            int a[50];
+            // Heap sort
+        else if (option == 5) {
+            int size = 20;
+            int a[20];
             int kthElement = 0;
             setbuf(stdout, 0);
             printf("%s", "Please enter the name of the file :");
@@ -369,13 +369,19 @@ int main() {
             scanf("%s", filename);
             read(a, filename);
             numberOfBasicOp = 0;
-            heapSort(a,50);
+            buildHeap(a, 20);
+            // [1,2,3,4,5]
             printf("k th element?");
             scanf("%d", &kthElement);
-            int numberOfDeletion=50-kthElement;
-            for (int i = 0; i < numberOfDeletion; ++i) {
+            int numberOfDeletion = 20 - kthElement;
 
+            for (int i = 0; i <numberOfDeletion ; ++i) {
+                deleteRoot(a,size);
+                size--;
             }
+
+            printf("The root is : %d",a[0]);
+            printf("Number of comparisons : %d\n", numberOfBasicOp);
 
         }
     }

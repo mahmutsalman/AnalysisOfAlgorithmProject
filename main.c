@@ -204,9 +204,12 @@ void swap2(int *a, int *b) {
     *b = temp;
 }
 
-void selectionSort(int array[], int size) {
+int selectionSort(int array[], int size,int kthElement) {
     for (int step = 0; step < size - 1; step++) {
         int min_idx = step;
+        if(step==kthElement) {
+            return array[kthElement-1];
+        }
         for (int i = step + 1; i < size; i++) {
 
             // To sort in descending order, change > to < in this line.
@@ -216,9 +219,13 @@ void selectionSort(int array[], int size) {
         }
         // put min at the correct position
         // exchange
-        swap2(&array[min_idx], &array[step]);
+
+            swap2(&array[min_idx], &array[step]);
+
+
     }
 }
+
 
 int main() {
     int iterator = 0;
@@ -252,7 +259,6 @@ int main() {
             printf("%s", "Please enter the name of the file :");
             char filename[20];
             scanf("%s", filename);
-            read(a, filename);
             numberOfBasicOp = 0;
             read(a, filename);
             // Generate worst case
@@ -279,23 +285,19 @@ int main() {
         }
             //Selection sort
         else if (option == 4) {
-            int a[10];
+            int a[7];
             int kthElement = 0;
             setbuf(stdout, 0);
             printf("%s", "Please enter the name of the file :");
             char filename[20];
             scanf("%s", filename);
             read(a, filename);
-            numberOfBasicOp = 0;
-            selectionSort(a, 10);
-            printf("Number of comparisons %d\n", numberOfBasicOp);
             printf("k th element?");
             scanf("%d", &kthElement);
-            printf("%d\n", returnKthElement(a, kthElement));
-
-
+            numberOfBasicOp = 0;
+            printf("kth element is %d\n",selectionSort(a, 7,kthElement));
+            printf("Number of comparisons %d\n", numberOfBasicOp);
         }
-
     }
 
     return 0;

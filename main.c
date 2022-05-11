@@ -1,11 +1,13 @@
 #include<stdio.h>
 #include <string.h>
+#include <math.h>
+#include <stdlib.h>
 
 //Global value
 int numberOfBasicOp = 0;
 int count = 0;
 
-void insertionSort(int array[], int size) {
+void insertionSort2(int array[], int size) {
     numberOfBasicOp = 0;
     for (int step = 1; step < size; step++) {
         int key = array[step];
@@ -20,6 +22,30 @@ void insertionSort(int array[], int size) {
         }
         array[j + 1] = key;
     }
+}
+int  insertionSort( int arr[ ], int n)
+{
+    int i,temp,j;
+    int comp=0;
+
+    for( i=1; i<n ; i++ )
+    {
+        temp=arr[i];
+        j = i - 1;
+
+        while( j>=0 && temp<arr[j])
+        {
+            arr[j+1] = arr[j] ;
+            j = j-1 ;
+            comp++;
+        }
+        arr[j+1]=temp;
+        if(temp>arr[j])
+        {
+            comp++;
+        }
+    }
+    return comp;
 }
 
 // Quick-sort algorithm
@@ -59,15 +85,27 @@ int partition(int array[], int low, int high) {
     // return the partition point
     return (i + 1);
 }
+int partition3(int a[],int l,int r){
+    int pivot = a[l];
+    int i=l;
+    for (int j = l+1; j <r+1 ; ++j) {
+        if(++numberOfBasicOp && a[j]<=pivot){
+            i++;
+            swap(&a[i],&a[j]);
+        }
+    }
+    swap(&a[i],&a[l]);
+    return i;
+
+}
 
 // QUICK SORT
 void quickSort(int array[], int low, int high) {
     if (low < high) {
-
         // find the pivot element such that
         // elements smaller than pivot are on left of pivot
         // elements greater than pivot are on right of pivot
-        int pi = partition(array, low, high);
+        int pi = partition3(array, low, high);
 
         // recursive call on the left of pivot
         quickSort(array, low, pi - 1);
@@ -220,8 +258,6 @@ int selectionSort(int array[], int size, int kthElement) {
         // exchange
 
         swap2(&array[min_idx], &array[step]);
-
-
     }
 }
 
@@ -240,13 +276,22 @@ void heapify(int arr[], int n, int i) {
 
 // If left child is greater than root
 
-    if (leftChild < n && arr[leftChild] > arr[largest])
-        largest = leftChild;
+    if (leftChild < n) {
+        numberOfBasicOp++;
+        if (arr[leftChild] > arr[largest]) {
+            largest = leftChild;
+        }
+    }
 
 // If right child is greater than new largest
 
-    if (rightChild < n && arr[rightChild] > arr[largest])
-        largest = rightChild;
+    if (rightChild < n) {
+        numberOfBasicOp++;
+        if (arr[rightChild] > arr[largest]) {
+            largest = rightChild;
+        }
+
+    }
 
 // If largest is not the root
 
@@ -287,34 +332,104 @@ void deleteRoot(int arr[], int n) {
     heapify(arr, n, 0);
 }
 
+// Quick select
+// Partition using Lomuto partition scheme
+int partition2(int a[], int left, int right, int pIndex) {
+    // pick `pIndex` as a pivot from the array
+    int pivot = a[pIndex];
+
+    // Move pivot to end
+    swap(&a[pIndex], &a[right]);
+
+    // elements less than the pivot will be pushed to the left of `pIndex`;
+    // elements more than the pivot will be pushed to the right of `pIndex`;
+    // equal elements can go either way
+    pIndex = left;
+
+    // each time we find an element less than or equal to the pivot, `pIndex`
+    // is incremented, and that element would be placed before the pivot.
+    for (int i = left; i < right; i++) {
+        if (a[i] <= pivot) {
+            swap(&a[i],& a[pIndex]);
+            pIndex++;
+        }
+    }
+
+    // move pivot to its final place
+    swap(&a[pIndex], &a[right]);
+
+    // return `pIndex` (index of the pivot element)
+    return pIndex;
+}
+
+// Returns the k'th smallest element in the list within `left…right`
+// (i.e., left <= k <= right). The search space within the array is
+// changing for each round – but the list is still the same size.
+// Thus, `k` does not need to be updated with each round.
+int quickselect(int nums[], int left, int right, int k) {
+    while (1)
+    {
+        // If the array contains only one element, return that element
+        if (left == right) {
+            return nums[left];
+        }
+
+        // select `pIndex` between left and right
+        int pIndex = left + rand() % (right - left + 1);
+
+        pIndex = partition2(nums, left, right, pIndex);
+
+        // The pivot is in its final sorted position
+        numberOfBasicOp++;
+        if (k == pIndex) {
+            return nums[k];
+        }
+
+            // if `k` is less than the pivot index
+        else if (k < pIndex) {
+            right = pIndex - 1;
+        }
+
+            // if `k` is more than the pivot index
+        else {
+            left = pIndex + 1;
+        }
+    }
+}
+
 
 int main() {
     int iterator = 0;
     while (iterator < 10) {
         setbuf(stdout, 0);
-        printf("Enter algorithm type:          --Insertion: 1,Merge Sort: 2 ,Quicksort: 3,Selection sort: 4 , Heap sort: 5 \n");
+        printf("Enter algorithm type:          --Insertion: 1,Merge Sort: 2 ,Quicksort: 3,Selection sort: 4 , Heap sort: 5 , Quick select: 6 \n");
         int option;
         scanf("%d", &option);
 
         //For Insertion sort
         if (option == 1) {
-            int a[15];
+            int arraySize=0;
+            printf("Enter input size : \n");
+            scanf("%d", &arraySize);
+            int a[arraySize];
             int kthElement = 0;
-            setbuf(stdout, 0);
             printf("%s", "Please enter the name of the file :");
             char filename[20];
             scanf("%s", filename);
             read(a, filename);
             numberOfBasicOp = 0;
-            insertionSort(a, 15);
-            printf("Number of comparisons %d\n", numberOfBasicOp);
+
+            printf("Number of comparisons %d\n", insertionSort(a, arraySize));
             printf("k th element?");
             scanf("%d", &kthElement);
             printf("%d\n", returnKthElement(a, kthElement));
         }
             //Merge sort
         else if (option == 2) {
-            int a[50];
+            int arraySize=0;
+            printf("Enter input size : \n");
+            scanf("%d", &arraySize);
+            int a[arraySize];
             int kthElement = 0;
             setbuf(stdout, 0);
             printf("%s", "Please enter the name of the file :");
@@ -323,14 +438,17 @@ int main() {
             numberOfBasicOp = 0;
             read(a, filename);
             // Generate worst case
-            generateWorstCase(a, 0, 50 - 1); // size - 1
-            printArr(a, 50);
-            printf("Number of comparisons %d \n", mergesort(a, 0, 50 - 1));
+            generateWorstCase(a, 0, arraySize-1); // size - 1
+
+            printf("Number of comparisons %d \n", mergesort(a, 0, arraySize-1));
 
         }
-            // Quicksort
+        // Quicksort
         else if (option == 3) {
-            int a[50];
+            int arraySize=0;
+            printf("Enter input size : \n");
+            scanf("%d", &arraySize);
+            int a[arraySize];
             int kthElement = 0;
             setbuf(stdout, 0);
             printf("%s", "Please enter the name of the file :");
@@ -338,30 +456,34 @@ int main() {
             scanf("%s", filename);
             read(a, filename);
             numberOfBasicOp = 0;
-            quickSort(a, 0, 49);
+            quickSort(a, 0, arraySize-1);
             printf("Number of comparisons %d\n", numberOfBasicOp);
             printf("k th element?");
             scanf("%d", &kthElement);
             printf("%d\n", returnKthElement(a, kthElement));
         }
 
-            //Selection sort
+        //Selection sort
         else if (option == 4) {
-            int a[7];
+            int arraySize=0;
+            printf("Enter input size : \n");
+            scanf("%d", &arraySize);
+            int a[arraySize];
             int kthElement = 0;
             setbuf(stdout, 0);
             printf("%s", "Please enter the name of the file :");
             char filename[20];
             scanf("%s", filename);
             read(a, filename);
-
-            printf("kth element is %d\n", selectionSort(a, 7, kthElement));
+            printf("kth element is %d\n", selectionSort(a, arraySize, kthElement));
             printf("Number of comparisons %d\n", numberOfBasicOp);
         }
-            // Heap sort
+        // Heap sort
         else if (option == 5) {
-            int size = 20;
-            int a[20];
+            int arraySize=0;
+            printf("Enter input size : \n");
+            scanf("%d", &arraySize);
+            int a[arraySize];
             int kthElement = 0;
             setbuf(stdout, 0);
             printf("%s", "Please enter the name of the file :");
@@ -369,18 +491,33 @@ int main() {
             scanf("%s", filename);
             read(a, filename);
             numberOfBasicOp = 0;
-            buildHeap(a, 20);
-            // [1,2,3,4,5]
+            buildHeap(a, arraySize);
             printf("k th element?");
             scanf("%d", &kthElement);
-            int numberOfDeletion = 20 - kthElement;
-
-            for (int i = 0; i <numberOfDeletion ; ++i) {
-                deleteRoot(a,size);
-                size--;
+            int numberOfDeletion = arraySize - kthElement;
+            for (int i = 0; i < numberOfDeletion; ++i) {
+                deleteRoot(a, arraySize);
+                arraySize--;
             }
-
-            printf("The root is : %d",a[0]);
+            printf("The root is : %d \n", a[0]);
+            printf("Number of comparisons : %d\n", numberOfBasicOp);
+        }
+        // Quick select
+        else if(option == 6){
+            int arraySize=0;
+            printf("Enter input size : \n");
+            scanf("%d", &arraySize);
+            int a[arraySize];
+            int kthElement = 0;
+            setbuf(stdout, 0);
+            printf("%s", "Please enter the name of the file :");
+            char filename[20];
+            scanf("%s", filename);
+            read(a, filename);
+            numberOfBasicOp = 0;
+            printf("k th element?");
+            scanf("%d", &kthElement);
+            printf("k th element is : %d ",quickselect(a,0,arraySize-1,kthElement-1));
             printf("Number of comparisons : %d\n", numberOfBasicOp);
 
         }
